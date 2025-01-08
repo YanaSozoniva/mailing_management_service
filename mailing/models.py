@@ -46,12 +46,17 @@ class Newsletter(models.Model):
         (LAUNCHED, "Запущена"),
         (COMPLETED, "Завершена"),
     ]
-    name = models.CharField(max_length=50, verbose_name='Название рассылки')
+    name = models.CharField(max_length=50, verbose_name="Название рассылки")
     created_at = models.DateTimeField(verbose_name="Дата и время создания первой рассылки", auto_now_add=True)
     updated_at = models.DateField(verbose_name="Дата и время последней рассылки", auto_now=True)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=CREATED, verbose_name="статус рассылки")
     message = models.ForeignKey(
-        to=Message, on_delete=models.SET_NULL, related_name="newsletters", verbose_name="Сообщение"
+        to=Message,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="newsletters",
+        verbose_name="Сообщение",
     )
     recipients = models.ManyToManyField(
         to=MailingRecipient, related_name="newsletters", verbose_name="Получатели рассылки"
