@@ -1,0 +1,14 @@
+{% extends 'mailing/home.html' %}
+
+{% block title %}Список возможных получателей рассылок{% endblock %}
+
+{% block content %}
+<h2>Список возможных получателей рассылок</h2>
+<ul class="list-group">
+    {% for recipient in recipients %}
+        <li class="list-group-item">
+            <p>{{ recipient.last_name }} {{ recipient.first_name }} email: {{ recipient.email }}</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
