@@ -1,0 +1,14 @@
+<!-- library/templates/library/books_detail.html -->
+{% extends 'mailing/home.html' %}
+
+{% block title %}Подробная информация по получателю{% endblock %}
+
+{% block content %}
+
+<h2>{{ recipient.first_name }} {{ recipient.last_name }} {{ recipient.surname }}</h2>
+<p>email: {{ recipient.email }}</p>
+<p>Доп. информация: {{ recipient.comment }}</p>
+<a href="{% url 'mailing:recipient_update' recipient.pk %}" class="btn btn-secondary">Редактировать</a>
+<a href="{% url 'mailing:recipient_delete' recipient.pk %}" class="btn btn-danger">Удалить</a>
+<a href="{% url 'mailing:recipient_list' %}" class="btn btn-primary">Вернуться к списку</a>
+{% endblock %}

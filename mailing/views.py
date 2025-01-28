@@ -15,12 +15,15 @@ class MailingRecipientList(ListView):
 class MailingRecipientDetail(DetailView):
     """Контроллер детализации получателя рассылок"""
     model = MailingRecipient
+    template_name = 'mailing/recipient_detail.html'
+    context_object_name = 'recipient'
 
 
 class MailingRecipientCreate(CreateView):
     """Контроллер создания получателя рассылок"""
     model = MailingRecipient
     form_class = MailingRecipientForm
+    template_name = 'mailing/recipient_form.html'
     success_url = reverse_lazy("mailing:recipient_list")
 
 
@@ -28,6 +31,7 @@ class MailingRecipientUpdate(UpdateView):
     """Контроллер изменения получателя рассылок"""
     model = MailingRecipient
     form_class = MailingRecipientForm
+    template_name = 'mailing/recipient_form.html'
     success_url = reverse_lazy("mailing:recipient_list")
 
 
