@@ -17,6 +17,7 @@ urlpatterns = [
     path("recipient/create/", MailingRecipientCreate.as_view(), name="recipient_create"),
     path("recipient/<int:pk>/delete/", MailingRecipientDelete.as_view(), name="recipient_delete"),
     path("recipient/<int:pk>/update/", MailingRecipientUpdate.as_view(), name="recipient_update"),
+
     path("message/", MessageList.as_view(), name="message_list"),
     path("message/<int:pk>/", MessageDetail.as_view(), name="message_detail"),
     path("message/create/", MessageCreate.as_view(), name="message_create"),

@@ -50,7 +50,7 @@ class MessageList(ListView):
     """Контроллер вывода списка сообщений"""
 
     model = Message
-    context_object_name = "Messages"
+    context_object_name = "messages"
 
 
 class MessageDetail(DetailView):
@@ -72,7 +72,7 @@ class MessageUpdate(UpdateView):
 
     model = Message
     form_class = MessageForm
-    success_url = reverse_lazy("mailing:message_list")
+    success_url = reverse_lazy("mailing:message_detail")
 
 
 class MessageDelete(DeleteView):
