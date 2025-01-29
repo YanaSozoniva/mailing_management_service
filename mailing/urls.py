@@ -7,6 +7,7 @@ from mailing.views import (
     MailingRecipientDelete,
     MailingRecipientUpdate,
     MessageList, MessageDelete, MessageDetail, MessageUpdate, MessageCreate,
+    NewsletterList, NewsletterCreate, NewsletterDelete, NewsletterDetail, NewsletterUpdate
 )
 
 app_name = MailingConfig.name
@@ -23,4 +24,10 @@ urlpatterns = [
     path("message/create/", MessageCreate.as_view(), name="message_create"),
     path("message/<int:pk>/delete/", MessageDelete.as_view(), name="message_delete"),
     path("message/<int:pk>/update/", MessageUpdate.as_view(), name="message_update"),
+
+    path("newsletter/", NewsletterList.as_view(), name="newsletter_list"),
+    path("newsletter/<int:pk>/", NewsletterDetail.as_view(), name="newsletter_detail"),
+    path("newsletter/create/", NewsletterCreate.as_view(), name="newsletter_create"),
+    path("newsletter/<int:pk>/delete/", NewsletterDelete.as_view(), name="newsletter_delete"),
+    path("newsletter/<int:pk>/update/", NewsletterUpdate.as_view(), name="newsletter_update"),
 ]

@@ -1,0 +1,17 @@
+<!-- library/templates/library/books_detail.html -->
+{% extends 'mailing/home.html' %}
+
+{% block title %}Информация по рассылке{% endblock %}
+
+{% block content %}
+
+<h2>Название рассылки: {{ newsletter.name }}</h2>
+<p>Статус рассылки: {{ newsletter.status }}</p>
+<p>Время начала рассылки: {{ newsletter.first_sending }}</p>
+<p>Время конца рассылки: {{ newsletter.last_sending }}</p>
+<p>Сообщение в рассылки: {{ newsletter.message }}</p>
+<p>Получатели рассылки: {{ newsletter.recipients }}</p>
+<a href="{% url 'mailing:newsletter_update' newsletter.pk %}" class="btn btn-secondary">Редактировать</a>
+<a href="{% url 'mailing:newsletter_delete' newsletter.pk %}" class="btn btn-danger">Удалить</a>
+<a href="{% url 'mailing:newsletter_list' %}" class="btn btn-primary">Вернуться к списку</a>
+{% endblock %}
