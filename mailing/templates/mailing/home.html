@@ -1,19 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Управление рассылкой сообщений{% endblock %}</title>
-    <!-- Подключение Bootstrap CSS -->
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-</head>
-<body>
-{% include 'mailing/includes/top_menu.html' %}
-    <div class="container mt-5">
-        {% block content %}
-        {% endblock %}
-    </div>
-    <!-- Подключение Bootstrap JS -->
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% extends 'mailing/base.html' %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+
+<h2>Статистические данные по рассылке</h2>
+<ul class="list-group">
+    {% for recipient in recipients %}
+        <li class="list-group-item">
+
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

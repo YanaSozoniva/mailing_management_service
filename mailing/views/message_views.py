@@ -8,6 +8,7 @@ class MessageList(ListView):
     """Контроллер вывода списка сообщений"""
 
     model = Message
+    template_name = "mailing/message/message_list.html"
     context_object_name = "messages"
 
 
@@ -15,6 +16,7 @@ class MessageDetail(DetailView):
     """Контроллер детализации сообщения"""
 
     model = Message
+    template_name = "mailing/message/message_detail.html"
 
 
 class MessageCreate(CreateView):
@@ -22,6 +24,7 @@ class MessageCreate(CreateView):
 
     model = Message
     form_class = MessageForm
+    template_name = "mailing/message/message_form.html"
     success_url = reverse_lazy("mailing:message_list")
 
 
@@ -30,6 +33,7 @@ class MessageUpdate(UpdateView):
 
     model = Message
     form_class = MessageForm
+    template_name = "mailing/message/message_form.html"
     success_url = reverse_lazy("mailing:message_list")
 
 
@@ -37,4 +41,5 @@ class MessageDelete(DeleteView):
     """Контроллер удаления получателя рассылок"""
 
     model = Message
+    template_name = "mailing/message/message_confirm_delete.html"
     success_url = reverse_lazy("mailing:message_list")
