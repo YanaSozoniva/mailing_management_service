@@ -3,6 +3,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from mailing.models import Newsletter
 from mailing.forms import NewsletterForm
 
+
 class NewsletterList(ListView):
     """Контроллер вывода списка рассылок"""
 

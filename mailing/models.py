@@ -5,7 +5,9 @@ from django.db import models
 class MailingRecipient(models.Model):
     """Модель Получатель рассылок"""
 
-    email = models.EmailField(unique=True, verbose_name="Email", help_text="Укажите вашу электронную почту", validators=[EmailValidator()])
+    email = models.EmailField(
+        unique=True, verbose_name="Email", help_text="Укажите вашу электронную почту", validators=[EmailValidator()]
+    )
     first_name = models.CharField(max_length=100, verbose_name="Имя")
     last_name = models.CharField(max_length=100, verbose_name="Фамилия")
     surname = models.CharField(max_length=100, verbose_name="Отчество", null=True, blank=True)
@@ -71,3 +73,33 @@ class Newsletter(models.Model):
         verbose_name = "рассылка"
         verbose_name_plural = "рассылки"
         ordering = ["name", "first_sending", "last_sending"]
+
+
+class MailingAttempt(models.Model):
+    """Модель Попытка рассылки"""
+
+    SUCCESSFULLY = "successfully"
+    NOT_SUCCESSFULLY = "not_successfully"
+
+    STATUS_CHOICES = [
+        (SUCCESSFULLY, "Успешно"),
+        (NOT_SUCCESSFULLY, "Не успешно"),
+    ]
+    create_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default=NOT_SUCCESSFULLY, verbose_name="Успешность рассылки"
+    )
+    mail_response = models.TextField(verbose_name="Ответ почтового сервера", null=True, blank=True)
+    newsletter = models.ForeignKey(
+        to=Newsletter,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="mailingattempts",
+        verbose_name="Попытка рассылки",
+    )
+
+    class Meta:
+        verbose_name = "попытка рассылки"
+        verbose_name_plural = "попытки рассылки"
+        ordering = ["status"]
