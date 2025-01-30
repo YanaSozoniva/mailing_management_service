@@ -29,4 +29,13 @@ class MessageForm(StyleFormMixin, ModelForm):
 class NewsletterForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Newsletter
-        fields = "__all__"
+        fields = '__all__'
+
+    def clean_data_sending(self):
+        """Валидация проверки ввода даты начало и конца рассылки (начало<конца)"""
+        cleaned_data = super().clean()
+        first_sending = cleaned_data.get('first_sending')
+        last_sending = cleaned_data.get('last_sending')
+
+        if last_sending < first_sending:
+            self.add_error('last_sending', 'Дата конца рассылки не может быть раньше начало самой рассылки')

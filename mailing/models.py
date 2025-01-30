@@ -1,10 +1,11 @@
+from django.core.validators import EmailValidator
 from django.db import models
 
 
 class MailingRecipient(models.Model):
     """Модель Получатель рассылок"""
 
-    email = models.EmailField(unique=True, verbose_name="Email", help_text="Укажите вашу электронную почту")
+    email = models.EmailField(unique=True, verbose_name="Email", help_text="Укажите вашу электронную почту", validators=[EmailValidator()])
     first_name = models.CharField(max_length=100, verbose_name="Имя")
     last_name = models.CharField(max_length=100, verbose_name="Фамилия")
     surname = models.CharField(max_length=100, verbose_name="Отчество", null=True, blank=True)
