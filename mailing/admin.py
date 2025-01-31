@@ -18,7 +18,7 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
-    list_display = ("name", "first_sending", "last_sending", "status", "message")
+    list_display = ("name", "first_sending", "last_sending", "status", "message", 'get_recipients')
     list_filter = (
         "name",
         "first_sending",
@@ -26,3 +26,8 @@ class NewsletterAdmin(admin.ModelAdmin):
         "status",
     )
     search_fields = ("name", "message", "recipients")
+
+    def get_recipients(self, obj):
+        return ", ".join([recipient.email for recipient in obj.recipients.all()])
+
+    get_recipients.short_description = 'Recipients'

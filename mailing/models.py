@@ -52,7 +52,7 @@ class Newsletter(models.Model):
     ]
     name = models.CharField(max_length=50, verbose_name="Название рассылки")
     first_sending = models.DateTimeField(verbose_name="Дата и время создания первой рассылки", null=True, blank=True)
-    last_sending = models.DateField(verbose_name="Дата и время последней рассылки", null=True, blank=True)
+    last_sending = models.DateTimeField(verbose_name="Дата и время последней рассылки", null=True, blank=True)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=CREATED, verbose_name="статус рассылки")
     message = models.ForeignKey(
         to=Message,

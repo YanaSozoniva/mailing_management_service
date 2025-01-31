@@ -12,7 +12,7 @@
 <ul class="list-group">
     {% for newsletter in newsletters %}
         <li class="list-group-item">
-            <<a href="{% url 'mailing:newsletter_detail' newsletter.pk %}">{{ newsletter.name }} статус - {{ newsletter.status }}</a>
+            <<a href="{% url 'mailing:newsletter_detail' newsletter.pk %}">{{ newsletter.name }} статус - {{ newsletter.get_status_display }}</a>
         </li>
     {% endfor %}
 </ul>

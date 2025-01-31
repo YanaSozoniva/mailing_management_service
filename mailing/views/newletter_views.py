@@ -2,6 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from mailing.models import Newsletter
 from mailing.forms import NewsletterForm
+from django.core.cache import cache
 
 
 class NewsletterList(ListView):
@@ -17,6 +18,19 @@ class NewsletterDetail(DetailView):
 
     model = Newsletter
     template_name = "mailing/newsletter/newsletter_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        newsletter = self.get_object()
+        # Кэширование списка получателей
+        cache_key = f"newsletter_{newsletter.id}_recipients"
+        recipients = cache.get(cache_key)
+
+        if not recipients:
+            recipients = ", ".join([recipient.email for recipient in newsletter.recipients.all()])
+            cache.set(cache_key, recipients, timeout=60 * 15)  # Кэшируем на 15 минут
+
+        return context
 
 
 class NewsletterCreate(CreateView):

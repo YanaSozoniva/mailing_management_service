@@ -31,7 +31,7 @@ class NewsletterForm(StyleFormMixin, ModelForm):
         model = Newsletter
         fields = "__all__"
 
-    def clean_data_sending(self):
+    def clean(self):
         """Валидация проверки ввода даты начало и конца рассылки (начало<конца)"""
         cleaned_data = super().clean()
         first_sending = cleaned_data.get("first_sending")
