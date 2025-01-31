@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    username = None
+    """Модель пользователь"""
     email = models.EmailField(unique=True, verbose_name='Email')
     token = models.CharField(max_length=100, verbose_name='Token', null=True, blank=True)
 
