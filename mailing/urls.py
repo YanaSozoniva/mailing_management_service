@@ -16,12 +16,14 @@ from mailing.views import (
     NewsletterDelete,
     NewsletterDetail,
     NewsletterUpdate,
+    HomeViews
 )
 
 app_name = MailingConfig.name
 
 urlpatterns = [
-    path("", MailingRecipientList.as_view(), name="recipient_list"),
+    path("", HomeViews.as_view(), name="home"),
+    path("recipient/", MailingRecipientList.as_view(), name="recipient_list"),
     path("recipient/<int:pk>/", MailingRecipientDetail.as_view(), name="recipient_detail"),
     path("recipient/create/", MailingRecipientCreate.as_view(), name="recipient_create"),
     path("recipient/<int:pk>/delete/", MailingRecipientDelete.as_view(), name="recipient_delete"),
