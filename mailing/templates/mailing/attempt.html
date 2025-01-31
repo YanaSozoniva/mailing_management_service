@@ -1,0 +1,32 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Данные по попыткам рассылки</h1>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Название рассылки</th>
+      <th scope="col">Статус</th>
+      <th scope="col">email получателя</th>
+      <th scope="col">Ответ сервера</th>
+    </tr>
+  </thead>
+  {% for attempt in attempts%}
+  <tbody>
+    <tr>
+      <th>{{ attempt.newsletter }}</th>
+      <td>{{ attempt.status }}</td>
+      <td>{{ recipient }}</td>
+      <td>{{ attempt.mail_response }}</td>
+    </tr>
+    </tbody>
+  {% endfor %}
+</table>
+
+
+{% endblock %}
