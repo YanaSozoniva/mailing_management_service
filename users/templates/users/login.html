@@ -3,6 +3,13 @@
 
 <div class="container">
   <div class="row">
+ {% if messages %}
+          {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+         {% endfor %}
+    {% else %}
 
        <form class="row" method="post" enctype="multipart/form-data">
            <div class="col-6">
@@ -18,6 +25,7 @@
   </div>
     </form>
 
+{% endif %}
   </div>
 </div>
 
