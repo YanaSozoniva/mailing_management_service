@@ -5,9 +5,9 @@ from django import forms
 
 
 class UserRegisterForm(StyleFormMixin, UserCreationForm):
-    username = forms.CharField(max_length=50, required=True)
+    username = None
     usable_password = None
 
     class Meta:
         model = User
-        fields = ("email", 'username', 'first_name', 'last_name', "password1", "password2")
+        fields = ("email", 'first_name', 'last_name', "password1", "password2")

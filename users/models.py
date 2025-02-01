@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     """Модель пользователь"""
+    username = None
     email = models.EmailField(unique=True, verbose_name='Email')
     token = models.CharField(max_length=100, verbose_name='Token', null=True, blank=True)
 
