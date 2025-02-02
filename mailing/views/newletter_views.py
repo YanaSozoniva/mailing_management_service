@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from mailing.models import Newsletter
@@ -5,7 +6,7 @@ from mailing.forms import NewsletterForm
 from django.core.cache import cache
 
 
-class NewsletterList(ListView):
+class NewsletterList(LoginRequiredMixin, ListView):
     """Контроллер вывода списка рассылок"""
 
     model = Newsletter
@@ -13,7 +14,7 @@ class NewsletterList(ListView):
     context_object_name = "newsletters"
 
 
-class NewsletterDetail(DetailView):
+class NewsletterDetail(LoginRequiredMixin, DetailView):
     """Контроллер детализации рассылки"""
 
     model = Newsletter
@@ -33,7 +34,7 @@ class NewsletterDetail(DetailView):
         return context
 
 
-class NewsletterCreate(CreateView):
+class NewsletterCreate(LoginRequiredMixin, CreateView):
     """Контроллер создания новой рассылки"""
 
     model = Newsletter
@@ -41,8 +42,15 @@ class NewsletterCreate(CreateView):
     template_name = "mailing/newsletter/newsletter_form.html"
     success_url = reverse_lazy("mailing:newsletter_list")
 
+    def form_valid(self, form):
+        product = form.save()
+        user = self.request.user
+        product.owner = user
+        product.save()
+        return super().form_valid(form)
 
-class NewsletterUpdate(UpdateView):
+
+class NewsletterUpdate(LoginRequiredMixin, UpdateView):
     """Контроллер изменения рассылки"""
 
     model = Newsletter
@@ -51,7 +59,7 @@ class NewsletterUpdate(UpdateView):
     success_url = reverse_lazy("mailing:newsletter_list")
 
 
-class NewsletterDelete(DeleteView):
+class NewsletterDelete(LoginRequiredMixin, DeleteView):
     """Контроллер удаления получателя рассылок"""
 
     model = Newsletter
