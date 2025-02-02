@@ -7,4 +7,3 @@ from users.models import User
 class UserAdmin(admin.ModelAdmin):
     list_display = ("email", "last_name", "first_name")
     list_filter = ("email",)
-

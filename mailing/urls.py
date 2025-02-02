@@ -17,7 +17,7 @@ from mailing.views import (
     NewsletterDetail,
     NewsletterUpdate,
     HomeViews,
-    MailingAttemptView
+    MailingAttemptView,
 )
 
 app_name = MailingConfig.name

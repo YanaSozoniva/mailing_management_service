@@ -4,11 +4,11 @@ from django.contrib.auth import get_user_model
 
 class Command(BaseCommand):
     """Кастомная команда для создания суперпользователя"""
+
     def handle(self, *args, **options):
         User = get_user_model()
         user = User.objects.create(
             email="admin@sky.pro",
-
         )
         user.set_password("123qwe456rty")
         user.is_active = True

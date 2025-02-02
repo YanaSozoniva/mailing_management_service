@@ -23,16 +23,15 @@ class UserCreateViews(CreateView):
         user.token = token
         user.save()
         host = self.request.get_host()
-        url = f'http://{host}/users/email-confirm/{token}/'
+        url = f"http://{host}/users/email-confirm/{token}/"
         send_mail(
-            subject='Подтверждение почты',
-            message=f'Здравствуйте, для регистрации почты {url} перейдите по ссылке',
+            subject="Подтверждение почты",
+            message=f"Здравствуйте, для регистрации почты {url} перейдите по ссылке",
             from_email=EMAIL_HOST_USER,
             recipient_list=[user.email],
-
         )
 
-        messages.success(self.request, 'Письмо с подтверждением отправлено на ваш email.')
+        messages.success(self.request, "Письмо с подтверждением отправлено на ваш email.")
         return super().form_valid(form)
 
 
@@ -41,5 +40,5 @@ def email_verification(request, token):
     user.token = None
     user.is_active = True
     user.save()
-    messages.success(request, 'Ваш email успешно подтверждён!')
-    return redirect(reverse('users:login'))
+    messages.success(request, "Ваш email успешно подтверждён!")
+    return redirect(reverse("users:login"))

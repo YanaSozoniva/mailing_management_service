@@ -9,6 +9,7 @@
             {{ message }}
         </div>
          {% endfor %}
+      <a href="{% url 'users:login' %}">Войти</a>
     {% else %}
 
        <form class="row" method="post" enctype="multipart/form-data">
@@ -24,8 +25,11 @@
          </div>
   </div>
     </form>
-
+<p><a href="{% url 'users:password_reset' %}">Забыли пароль?</a></p>
 {% endif %}
+
+
+
   </div>
 </div>
 
