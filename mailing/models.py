@@ -1,5 +1,6 @@
 from django.core.validators import EmailValidator
 from django.db import models
+from users.models import User
 
 
 class MailingRecipient(models.Model):
@@ -12,6 +13,13 @@ class MailingRecipient(models.Model):
     last_name = models.CharField(max_length=100, verbose_name="Фамилия")
     surname = models.CharField(max_length=100, verbose_name="Отчество", null=True, blank=True)
     comment = models.TextField(verbose_name="Комментарий", null=True, blank=True)
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Создатель получателя рассылки",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} email: {self.email}"
@@ -28,6 +36,13 @@ class Message(models.Model):
     subject_letter = models.CharField(max_length=200, verbose_name="Тема письма")
     body_letter = models.TextField(verbose_name="Тело письма", null=True, blank=True)
     create_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Создатель сообщения",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     def __str__(self):
         return f"{self.subject_letter}"
@@ -65,6 +80,13 @@ class Newsletter(models.Model):
     recipients = models.ManyToManyField(
         to=MailingRecipient, related_name="newsletters", verbose_name="Получатели рассылки"
     )
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Создатель рассылки",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     def __str__(self):
         return f"{self.name}: Дата первой рассылки: {self.first_sending}, дата последней рассылки: {self.last_sending}"
@@ -73,6 +95,9 @@ class Newsletter(models.Model):
         verbose_name = "рассылка"
         verbose_name_plural = "рассылки"
         ordering = ["name", "first_sending", "last_sending"]
+        permissions = [
+            ("can_disable_newsletter", "Can disable newsletter"),
+        ]
 
 
 class MailingAttempt(models.Model):
@@ -103,3 +128,4 @@ class MailingAttempt(models.Model):
         verbose_name = "попытка рассылки"
         verbose_name_plural = "попытки рассылки"
         ordering = ["status"]
+

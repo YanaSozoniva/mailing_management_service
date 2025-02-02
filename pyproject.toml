@@ -11,6 +11,8 @@ django = "^5.1.4"
 psycopg2-binary = "^2.9.10"
 python-dotenv = "^1.0.1"
 ipython = "^8.31.0"
+django-phonenumber-field = {extras = ["phonenumberslite"], version = "^8.0.0"}
+pillow = "^11.1.0"
 
 
 [tool.poetry.group.link.dependencies]

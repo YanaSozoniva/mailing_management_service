@@ -6,8 +6,7 @@ from django import forms
 
 class UserRegisterForm(StyleFormMixin, UserCreationForm):
     username = None
-    usable_password = None
 
     class Meta:
         model = User
-        fields = ("email", "first_name", "last_name", "password1", "password2")
+        fields = ("email", "phone", "avatar", "country", "password1", "password2")
