@@ -1,9 +1,11 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from mailing.models import Newsletter
 from mailing.forms import NewsletterForm
 from django.core.cache import cache
+
+from mailing.services import get_list_by_owner
 
 
 class NewsletterList(LoginRequiredMixin, ListView):
@@ -12,6 +14,11 @@ class NewsletterList(LoginRequiredMixin, ListView):
     model = Newsletter
     template_name = "mailing/newsletter/newsletter_list.html"
     context_object_name = "newsletters"
+
+    def get_queryset(self):
+        if not self.request.user.has_perm("mailing.view_mailingrecipient"):
+            return get_list_by_owner(self.request.user.id, Newsletter)
+        return Newsletter.objects.all()
 
 
 class NewsletterDetail(LoginRequiredMixin, DetailView):
@@ -29,18 +36,19 @@ class NewsletterDetail(LoginRequiredMixin, DetailView):
 
         if not recipients:
             recipients = ", ".join([recipient.email for recipient in newsletter.recipients.all()])
-            cache.set(cache_key, recipients, timeout=60 * 15)  # Кэшируем на 15 минут
+            cache.set(cache_key, recipients, timeout=60)  # Кэшируем на 15 минут
 
         return context
 
 
-class NewsletterCreate(LoginRequiredMixin, CreateView):
+class NewsletterCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """Контроллер создания новой рассылки"""
 
     model = Newsletter
     form_class = NewsletterForm
     template_name = "mailing/newsletter/newsletter_form.html"
     success_url = reverse_lazy("mailing:newsletter_list")
+    permission_required = 'mailing.add_newsletter'
 
     def form_valid(self, form):
         product = form.save()
@@ -50,21 +58,23 @@ class NewsletterCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class NewsletterUpdate(LoginRequiredMixin, UpdateView):
+class NewsletterUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """Контроллер изменения рассылки"""
 
     model = Newsletter
     form_class = NewsletterForm
     template_name = "mailing/newsletter/newsletter_form.html"
     success_url = reverse_lazy("mailing:newsletter_list")
+    permission_required = 'mailing.change_newsletter'
 
     def get_success_url(self):
         return reverse('mailing:newsletter_detail', args=[self.kwargs.get('pk')])
 
 
-class NewsletterDelete(LoginRequiredMixin, DeleteView):
+class NewsletterDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """Контроллер удаления получателя рассылок"""
 
     model = Newsletter
     template_name = "mailing/newsletter/newsletter_confirm_delete.html"
     success_url = reverse_lazy("mailing:newsletter_list")
+    permission_required = 'mailing.delete_newsletter'

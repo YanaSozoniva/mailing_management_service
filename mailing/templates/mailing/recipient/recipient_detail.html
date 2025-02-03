@@ -8,7 +8,9 @@
 <h2>{{ recipient.first_name }} {{ recipient.last_name }} {{ recipient.surname }}</h2>
 <p>email: {{ recipient.email }}</p>
 <p>Доп. информация: {{ recipient.comment }}</p>
-<a href="{% url 'mailing:recipient_update' recipient.pk %}" class="btn btn-secondary">Редактировать</a>
-<a href="{% url 'mailing:recipient_delete' recipient.pk %}" class="btn btn-danger">Удалить</a>
+{% if perms.mailing.change_mailingrecipient %}
+    <a href="{% url 'mailing:recipient_update' recipient.pk %}" class="btn btn-secondary">Редактировать</a>
+    <a href="{% url 'mailing:recipient_delete' recipient.pk %}" class="btn btn-danger">Удалить</a>
+{% endif %}
 <a href="{% url 'mailing:recipient_list' %}" class="btn btn-primary">Вернуться к списку</a>
 {% endblock %}
