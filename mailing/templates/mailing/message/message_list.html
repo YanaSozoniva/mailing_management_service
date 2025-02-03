@@ -3,10 +3,13 @@
 {% block title %}Список сообщений{% endblock %}
 
 {% block content %}
+
+ {% if perms.mailing.add_message %}
 <p>
 <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
     <a class="btn btn-primary btn-lg px-4 me-sm-3" href="{% url 'mailing:message_create' %}">Добавить новое сообщение</a>
 </div>
+{% endif %}
 </p>
 <h2>Список сообщений</h2>
 <ul class="list-group">

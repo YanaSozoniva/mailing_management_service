@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from mailing.models import Newsletter
 from mailing.forms import NewsletterForm
@@ -57,6 +57,9 @@ class NewsletterUpdate(LoginRequiredMixin, UpdateView):
     form_class = NewsletterForm
     template_name = "mailing/newsletter/newsletter_form.html"
     success_url = reverse_lazy("mailing:newsletter_list")
+
+    def get_success_url(self):
+        return reverse('mailing:newsletter_detail', args=[self.kwargs.get('pk')])
 
 
 class NewsletterDelete(LoginRequiredMixin, DeleteView):

@@ -6,8 +6,18 @@
 {% block content %}
 
 <h2>Тема сообщения: {{ message.subject_letter }}</h2>
-<p>Текст сообщения: {{ message.body_letter }}</p>
-<a href="{% url 'mailing:message_update' message.pk %}" class="btn btn-secondary">Редактировать</a>
-<a href="{% url 'mailing:message_delete' message.pk %}" class="btn btn-danger">Удалить</a>
+{% if message.body_letter %}
+    <div class="alert alert-info" role="alert">
+        <p>Текст сообщения: {{ message.body_letter }}</p>
+    </div>
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        <p>Текст сообщения отсутствует.</p>
+    </div>
+{% endif %}
+    {% if perms.mailing.change_message %}
+    <a href="{% url 'mailing:message_update' message.pk %}" class="btn btn-secondary">Редактировать</a>
+    <a href="{% url 'mailing:message_delete' message.pk %}" class="btn btn-danger">Удалить</a>
+    {% endif %}
 <a href="{% url 'mailing:message_list' %}" class="btn btn-primary">Вернуться к списку</a>
 {% endblock %}

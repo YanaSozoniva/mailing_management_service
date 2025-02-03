@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from mailing.models import MailingRecipient
 from mailing.forms import MailingRecipientForm
@@ -44,6 +44,9 @@ class MailingRecipientUpdate(LoginRequiredMixin, UpdateView):
     form_class = MailingRecipientForm
     template_name = "mailing/recipient/recipient_form.html"
     success_url = reverse_lazy("mailing:recipient_list")
+
+    def get_success_url(self):
+        return reverse('mailing:recipient_detail', args=[self.kwargs.get('pk')])
 
 
 class MailingRecipientDelete(LoginRequiredMixin, DeleteView):
