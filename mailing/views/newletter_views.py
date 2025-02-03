@@ -16,7 +16,7 @@ class NewsletterList(LoginRequiredMixin, ListView):
     context_object_name = "newsletters"
 
     def get_queryset(self):
-        if not self.request.user.has_perm("mailing.view_mailingrecipient"):
+        if not self.request.user.has_perm("mailing.view_newsletter"):
             return get_list_by_owner(self.request.user.id, Newsletter)
         return Newsletter.objects.all()
 
