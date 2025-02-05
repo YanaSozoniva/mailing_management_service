@@ -1,7 +1,10 @@
-from django.core.cache import cache
+from  django.utils import timezone
 
-from mailing.models import MailingRecipient, Message, Newsletter
-from config.settings import CACHE_ENABLED
+from django.core.cache import cache
+from config.settings import CACHE_ENABLED, EMAIL_HOST_USER
+from django.core.mail import send_mail
+from mailing.models import MailingAttempt
+
 
 
 def get_list_by_owner(owner_id, model):
@@ -17,3 +20,35 @@ def get_list_by_owner(owner_id, model):
     list_model = model.objects.filter(owner=owner_id)
     cache.set(key, list_model)
     return list_model
+
+
+def send_email(newsletter, email):
+    """Функция отправки сообщений пользователям и занесение данных по результатам рассылки """
+    mail_response = send_mail(
+        subject=newsletter.message.subject_letter,
+        message=newsletter.message.body_letter,
+        from_email=EMAIL_HOST_USER,
+        recipient_list=[email],
+        fail_silently=False,
+    )
+
+    MailingAttempt.objects.create(
+        status=MailingAttempt.SUCCESS if not mail_response else MailingAttempt.FAILURE,
+        mail_response=mail_response,
+        newsletter=newsletter,
+        email_recipient=email
+    )
+
+
+def update_status(newsletter):
+    """Функция изменения статуса рассылки с учетом текущей даты"""
+    now = timezone.now()
+    if newsletter.last_sending < now:
+        newsletter.status = "COMPLETED"
+    elif newsletter.status != "COMPLETED":
+        newsletter.status = "Запущена"
+    newsletter.save()
+
+
+
+

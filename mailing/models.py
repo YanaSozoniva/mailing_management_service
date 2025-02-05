@@ -103,16 +103,16 @@ class Newsletter(models.Model):
 class MailingAttempt(models.Model):
     """Модель Попытка рассылки"""
 
-    SUCCESSFULLY = "successfully"
-    NOT_SUCCESSFULLY = "not_successfully"
+    SUCCESS = "success"
+    FAILURE = "failure"
 
     STATUS_CHOICES = [
-        (SUCCESSFULLY, "Успешно"),
-        (NOT_SUCCESSFULLY, "Не успешно"),
+        (SUCCESS, "Успешно"),
+        (FAILURE, "Не успешно"),
     ]
     create_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default=NOT_SUCCESSFULLY, verbose_name="Успешность рассылки"
+        max_length=20, choices=STATUS_CHOICES, default=SUCCESS, verbose_name="Успешность рассылки"
     )
     mail_response = models.TextField(verbose_name="Ответ почтового сервера", null=True, blank=True)
     newsletter = models.ForeignKey(
@@ -122,6 +122,9 @@ class MailingAttempt(models.Model):
         blank=True,
         related_name="mailingattempts",
         verbose_name="Попытка рассылки",
+    )
+    email_recipient = models.EmailField(
+        verbose_name="Email", null=True, blank=True
     )
 
     class Meta:

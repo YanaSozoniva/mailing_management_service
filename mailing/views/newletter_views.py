@@ -1,11 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, View
 from mailing.models import Newsletter
 from mailing.forms import NewsletterForm
 from django.core.cache import cache
+from django.contrib import messages
 
-from mailing.services import get_list_by_owner
+from mailing.services import get_list_by_owner, send_email, update_status
 
 
 class NewsletterList(LoginRequiredMixin, ListView):
@@ -21,6 +23,35 @@ class NewsletterList(LoginRequiredMixin, ListView):
         return Newsletter.objects.all()
 
 
+class NewsletterSendMail(LoginRequiredMixin, View):
+    """Класс для отправки писем пользователям"""
+    model = Newsletter
+    template_name = "mailing/newsletter/newsletter_detail.html"
+    context_object_name = "newsletters"
+
+    def post(self, request, pk):
+        newsletter = get_object_or_404(Newsletter, id=pk)
+        self.send_emails(newsletter, request)
+        if newsletter.status == "COMPLETED":
+            messages.error(request,
+                           f"Рассылка не может быть инициирована, т.к. рассылка была завершена")
+        else:
+            self.send_emails(newsletter, request)
+            messages.success(request, "Письма отправлены!")
+
+        return redirect('mailing:newsletter_detail', pk=pk)
+
+    def send_emails(self, newsletter, request):
+
+        recipients = [recipient.email for recipient in newsletter.recipients.all()]
+        update_status(newsletter)
+        if newsletter.status != "COMPLETED":
+            for recipient in recipients:
+                send_email(newsletter, recipient)
+        else:
+            messages.error(request, f"Рассылка не может быть инициирована, т.к. дата окончания рассылки {newsletter.last_sending}")
+
+
 class NewsletterDetail(LoginRequiredMixin, DetailView):
     """Контроллер детализации рассылки"""
 
@@ -30,14 +61,14 @@ class NewsletterDetail(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         newsletter = self.get_object()
-        # Кэширование списка получателей
-        cache_key = f"newsletter_{newsletter.id}_recipients"
-        recipients = cache.get(cache_key)
-
-        if not recipients:
-            recipients = ", ".join([recipient.email for recipient in newsletter.recipients.all()])
-            cache.set(cache_key, recipients, timeout=60)  # Кэшируем на 15 минут
-
+        context['recipients'] = ", ".join([recipient.email for recipient in newsletter.recipients.all()])
+        # # Кэширование списка получателей
+        # cache_key = f"newsletter_{newsletter.id}_recipients"
+        # recipients = cache.get(cache_key)
+        #
+        # if not recipients:
+        #     recipients = ", ".join([recipient.email for recipient in newsletter.recipients.all()])
+        #     cache.set(cache_key, recipients, timeout=60)  # Кэшируем на 1 минуту
         return context
 
 

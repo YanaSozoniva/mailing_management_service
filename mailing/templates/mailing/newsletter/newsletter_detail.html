@@ -16,4 +16,21 @@
     <a href="{% url 'mailing:newsletter_delete' newsletter.pk %}" class="btn btn-danger">Удалить</a>
 {% endif %}
 <a href="{% url 'mailing:newsletter_list' %}" class="btn btn-primary">Вернуться к списку</a>
+
+{% if perms.mailing.change_newsletter %}
+<p>
+    <form action="{% url 'mailing:newsletter_sendmail' newsletter.id %}" method="post">
+       {% csrf_token %}
+    <button type="submit" class="btn btn-success">Отправить рассылку</button>
+    </form>
+</p>
+{% endif %}
+
+    {% if messages %}
+          {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+         {% endfor %}
+    {% endif %}
 {% endblock %}
