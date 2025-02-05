@@ -32,7 +32,7 @@ class NewsletterSendMail(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         newsletter = get_object_or_404(Newsletter, id=pk)
-        if newsletter.status == "COMPLETED":
+        if newsletter.status == "complete":
             messages.error(request, f"Рассылка не может быть инициирована, т.к. была завершена")
         else:
             self.send_emails(newsletter, request)
@@ -44,7 +44,7 @@ class NewsletterSendMail(LoginRequiredMixin, View):
     def send_emails(newsletter, request):
         recipients = [recipient.email for recipient in newsletter.recipients.all()]
         update_status(newsletter)
-        if newsletter.status != "COMPLETED":
+        if newsletter.status != "complete":
             for recipient in recipients:
                 send_email(newsletter, recipient)
         else:

@@ -14,7 +14,7 @@ class Command(BaseCommand):
             self.stdout.write(f"Обработка рассылки: {newsletter.name}")
             update_status(newsletter)
 
-            if newsletter.status != "COMPLETED":
+            if newsletter.status != "complete":
                 recipients = [recipient.email for recipient in newsletter.recipients.all()]
 
                 for recipient in recipients:

@@ -46,7 +46,7 @@ def update_status(newsletter):
     """Функция изменения статуса рассылки с учетом текущей даты"""
     now = timezone.now()
     if newsletter.last_sending < now:
-        newsletter.status = "COMPLETED"
-    elif newsletter.status != "COMPLETED":
-        newsletter.status = "Запущена"
+        newsletter.status = "complete"
+    elif newsletter.status != "complete":
+        newsletter.status = "launch"
     newsletter.save()

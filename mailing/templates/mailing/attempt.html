@@ -20,8 +20,8 @@
   <tbody>
     <tr>
       <th>{{ attempt.newsletter }}</th>
-      <td>{{ attempt.status }}</td>
-      <td>{{ recipient }}</td>
+      <td>{{ attempt.get_status_display }}</td>
+      <td>{{ attempt.email_recipient }}</td>
       <td>{{ attempt.mail_response }}</td>
     </tr>
     </tbody>
