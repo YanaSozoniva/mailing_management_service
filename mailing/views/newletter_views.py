@@ -25,31 +25,32 @@ class NewsletterList(LoginRequiredMixin, ListView):
 
 class NewsletterSendMail(LoginRequiredMixin, View):
     """Класс для отправки писем пользователям"""
+
     model = Newsletter
     template_name = "mailing/newsletter/newsletter_detail.html"
     context_object_name = "newsletters"
 
     def post(self, request, pk):
         newsletter = get_object_or_404(Newsletter, id=pk)
-        self.send_emails(newsletter, request)
         if newsletter.status == "COMPLETED":
-            messages.error(request,
-                           f"Рассылка не может быть инициирована, т.к. рассылка была завершена")
+            messages.error(request, f"Рассылка не может быть инициирована, т.к. была завершена")
         else:
             self.send_emails(newsletter, request)
             messages.success(request, "Письма отправлены!")
 
-        return redirect('mailing:newsletter_detail', pk=pk)
+        return redirect("mailing:newsletter_detail", pk=pk)
 
-    def send_emails(self, newsletter, request):
-
+    @staticmethod
+    def send_emails(newsletter, request):
         recipients = [recipient.email for recipient in newsletter.recipients.all()]
         update_status(newsletter)
         if newsletter.status != "COMPLETED":
             for recipient in recipients:
                 send_email(newsletter, recipient)
         else:
-            messages.error(request, f"Рассылка не может быть инициирована, т.к. дата окончания рассылки {newsletter.last_sending}")
+            messages.error(
+                request, f"Рассылка не может быть инициирована, т.к. дата окончания рассылки {newsletter.last_sending}"
+            )
 
 
 class NewsletterDetail(LoginRequiredMixin, DetailView):
@@ -61,14 +62,7 @@ class NewsletterDetail(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         newsletter = self.get_object()
-        context['recipients'] = ", ".join([recipient.email for recipient in newsletter.recipients.all()])
-        # # Кэширование списка получателей
-        # cache_key = f"newsletter_{newsletter.id}_recipients"
-        # recipients = cache.get(cache_key)
-        #
-        # if not recipients:
-        #     recipients = ", ".join([recipient.email for recipient in newsletter.recipients.all()])
-        #     cache.set(cache_key, recipients, timeout=60)  # Кэшируем на 1 минуту
+        context["recipients"] = ", ".join([recipient.email for recipient in newsletter.recipients.all()])
         return context
 
 
@@ -79,7 +73,7 @@ class NewsletterCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = NewsletterForm
     template_name = "mailing/newsletter/newsletter_form.html"
     success_url = reverse_lazy("mailing:newsletter_list")
-    permission_required = 'mailing.add_newsletter'
+    permission_required = "mailing.add_newsletter"
 
     def form_valid(self, form):
         product = form.save()
@@ -96,10 +90,10 @@ class NewsletterUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = NewsletterForm
     template_name = "mailing/newsletter/newsletter_form.html"
     success_url = reverse_lazy("mailing:newsletter_list")
-    permission_required = 'mailing.change_newsletter'
+    permission_required = "mailing.change_newsletter"
 
     def get_success_url(self):
-        return reverse('mailing:newsletter_detail', args=[self.kwargs.get('pk')])
+        return reverse("mailing:newsletter_detail", args=[self.kwargs.get("pk")])
 
 
 class NewsletterDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -108,4 +102,4 @@ class NewsletterDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Newsletter
     template_name = "mailing/newsletter/newsletter_confirm_delete.html"
     success_url = reverse_lazy("mailing:newsletter_list")
-    permission_required = 'mailing.delete_newsletter'
+    permission_required = "mailing.delete_newsletter"

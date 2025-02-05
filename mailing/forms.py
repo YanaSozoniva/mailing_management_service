@@ -17,7 +17,7 @@ class StyleFormMixin:
 class MailingRecipientForm(StyleFormMixin, ModelForm):
     class Meta:
         model = MailingRecipient
-        exclude = ('owner',)
+        exclude = ("owner",)
 
 
 class MessageForm(StyleFormMixin, ModelForm):
@@ -29,7 +29,10 @@ class MessageForm(StyleFormMixin, ModelForm):
 class NewsletterForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Newsletter
-        exclude = ("owner", "status", )
+        exclude = (
+            "owner",
+            "status",
+        )
 
     def clean(self):
         """Валидация проверки ввода даты начало и конца рассылки (начало<конца)"""

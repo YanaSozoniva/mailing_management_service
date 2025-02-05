@@ -35,7 +35,7 @@ class MailingRecipientCreate(LoginRequiredMixin, PermissionRequiredMixin, Create
     form_class = MailingRecipientForm
     template_name = "mailing/recipient/recipient_form.html"
     success_url = reverse_lazy("mailing:recipient_list")
-    permission_required = 'mailing.add_mailingrecipient'
+    permission_required = "mailing.add_mailingrecipient"
 
     def form_valid(self, form):
         product = form.save()
@@ -52,10 +52,10 @@ class MailingRecipientUpdate(LoginRequiredMixin, PermissionRequiredMixin, Update
     form_class = MailingRecipientForm
     template_name = "mailing/recipient/recipient_form.html"
     success_url = reverse_lazy("mailing:recipient_list")
-    permission_required = 'mailing.change_mailingrecipient'
+    permission_required = "mailing.change_mailingrecipient"
 
     def get_success_url(self):
-        return reverse('mailing:recipient_detail', args=[self.kwargs.get('pk')])
+        return reverse("mailing:recipient_detail", args=[self.kwargs.get("pk")])
 
 
 class MailingRecipientDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -64,4 +64,4 @@ class MailingRecipientDelete(LoginRequiredMixin, PermissionRequiredMixin, Delete
     model = MailingRecipient
     template_name = "mailing/recipient/recipient_confirm_delete.html"
     success_url = reverse_lazy("mailing:recipient_list")
-    permission_required = 'mailing.delete_mailingrecipient'
+    permission_required = "mailing.delete_mailingrecipient"

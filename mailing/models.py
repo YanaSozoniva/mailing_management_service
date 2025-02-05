@@ -123,12 +123,9 @@ class MailingAttempt(models.Model):
         related_name="mailingattempts",
         verbose_name="Попытка рассылки",
     )
-    email_recipient = models.EmailField(
-        verbose_name="Email", null=True, blank=True
-    )
+    email_recipient = models.EmailField(verbose_name="Email", null=True, blank=True)
 
     class Meta:
         verbose_name = "попытка рассылки"
         verbose_name_plural = "попытки рассылки"
         ordering = ["status"]
-

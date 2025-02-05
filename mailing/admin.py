@@ -1,5 +1,5 @@
 from django.contrib import admin
-from mailing.models import MailingRecipient, Message, Newsletter
+from mailing.models import MailingRecipient, Message, Newsletter, MailingAttempt
 
 
 @admin.register(MailingRecipient)
@@ -31,3 +31,7 @@ class NewsletterAdmin(admin.ModelAdmin):
         return ", ".join([recipient.email for recipient in obj.recipients.all()])
 
     get_recipients.short_description = "Recipients"
+
+    @admin.register(MailingAttempt)
+    class MailingAttempt(admin.ModelAdmin):
+        list_display = ("create_at", "status", "mail_response", "newsletter", "email_recipient")

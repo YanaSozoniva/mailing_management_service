@@ -33,7 +33,7 @@ class MessageCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = MessageForm
     template_name = "mailing/message/message_form.html"
     success_url = reverse_lazy("mailing:message_list")
-    permission_required = 'mailing.add_message'
+    permission_required = "mailing.add_message"
 
     def form_valid(self, form):
         product = form.save()
@@ -50,10 +50,10 @@ class MessageUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = MessageForm
     template_name = "mailing/message/message_form.html"
     success_url = reverse_lazy("mailing:message_list")
-    permission_required = 'mailing.change_message'
+    permission_required = "mailing.change_message"
 
     def get_success_url(self):
-        return reverse('mailing:message_detail', args=[self.kwargs.get('pk')])
+        return reverse("mailing:message_detail", args=[self.kwargs.get("pk")])
 
 
 class MessageDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -62,4 +62,4 @@ class MessageDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Message
     template_name = "mailing/message/message_confirm_delete.html"
     success_url = reverse_lazy("mailing:message_list")
-    permission_required = 'mailing.delete_message'
+    permission_required = "mailing.delete_message"
