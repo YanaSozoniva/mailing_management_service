@@ -1,0 +1,22 @@
+{% extends 'mailing/base.html' %}
+{% block title %}Список пользователей{% endblock %}
+
+{% block content %}
+<h2>Список пользователей</h2>
+<ul class="list-group">
+    {% for user in users %}
+        <li class="list-group-item">
+            <a href="{% url 'users:user_detail' user.pk %}">{{ user.email }}</a>
+                {% if perms.users.can_block_users %}
+                    {% if user.is_active' %}
+                        <form action="{% url 'users:block_user' user.pk %}" method="post">
+                            {% csrf_token %}
+                             <button class="btn btn-primary">Заблокировать пользователя</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -19,7 +19,7 @@
   {% for attempt in attempts%}
   <tbody>
     <tr>
-      <th>{{ attempt.newsletter }}</th>
+      <th>{{ attempt.newsletter.name }}</th>
       <td>{{ attempt.get_status_display }}</td>
       <td>{{ attempt.email_recipient }}</td>
       <td>{{ attempt.mail_response }}</td>

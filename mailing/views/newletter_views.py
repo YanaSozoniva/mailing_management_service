@@ -4,7 +4,6 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, View
 from mailing.models import Newsletter
 from mailing.forms import NewsletterForm
-from django.core.cache import cache
 from django.contrib import messages
 
 from mailing.services import get_list_by_owner, send_email, update_status

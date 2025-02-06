@@ -1,9 +1,12 @@
 import secrets
 
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView
+from django.views import View
+from django.views.generic import CreateView, ListView, DetailView
 
 from config.settings import EMAIL_HOST_USER
 from users.forms import UserRegisterForm
@@ -42,3 +45,39 @@ def email_verification(request, token):
     user.save()
     messages.success(request, "Ваш email успешно подтверждён!")
     return redirect(reverse("users:login"))
+
+
+class UserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    """Контроллер вывода списка сообщений"""
+
+    model = User
+    template_name = "user/users_list.html"
+    context_object_name = "users"
+    permission_required = "users.can_block_users"
+
+
+class BlockUsersView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        user = get_object_or_404(User, id=pk)
+
+        if not request.user.has_perm("users.can_block_users"):
+            raise PermissionDenied("У вас нет права на блокировку/разблокировку пользователя")
+
+        if user.is_active:
+            user.is_active = False
+        else:
+            user.is_active = True
+
+        user.save()
+
+        return redirect("users:user_detail", pk=pk)
+
+
+class UserDetail(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    """Контроллер вывода списка сообщений"""
+
+    model = User
+    template_name = "user/user_detail.html"
+    context_object_name = "user"
+    permission_required = "users.can_block_users"

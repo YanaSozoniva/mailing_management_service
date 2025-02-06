@@ -8,3 +8,7 @@ class MailingAttemptView(ListView):
     model = MailingAttempt
     template_name = "mailing/attempt.html"
     context_object_name = "attempts"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(newsletter__owner=self.request.user)
