@@ -21,7 +21,7 @@ from mailing.views import (
     HomeViews,
     MailingAttemptView,
     NewsletterSendMail,
-    DisableNewsletterView
+    DisableNewsletterView,
 )
 
 app_name = MailingConfig.name

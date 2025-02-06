@@ -19,11 +19,12 @@
                     <form action="{% url 'mailing:disable_newsletter' newsletter.pk %}" method="post">
                         {% csrf_token %}
                         {% if newsletter.status != 'complete' %}
-                             <button class="btn btn-primary">Отключить рассылку</button>
+                             <button class="btn btn-secondary">Отключить рассылку</button>
                         {% else %}
                             <button class="btn btn-primary">Включить рассылку</button>
-                    </form>
                         {% endif %}
+                    </form>
+
                 {% endif %}
             </li>
     {% endfor %}

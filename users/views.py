@@ -5,7 +5,9 @@ from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.cache import cache_page
 from django.views.generic import CreateView, ListView, DetailView
 
 from config.settings import EMAIL_HOST_USER
@@ -51,9 +53,9 @@ class UserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     """Контроллер вывода списка сообщений"""
 
     model = User
-    template_name = "user/users_list.html"
+    template_name = "users/users_list.html"
     context_object_name = "users"
-    permission_required = "users.can_block_users"
+    permission_required = "users.view_user"
 
 
 class BlockUsersView(LoginRequiredMixin, View):
@@ -74,10 +76,11 @@ class BlockUsersView(LoginRequiredMixin, View):
         return redirect("users:user_detail", pk=pk)
 
 
-class UserDetail(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+@method_decorator(cache_page(60 * 5), name="dispatch")
+class UserDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     """Контроллер вывода списка сообщений"""
 
     model = User
-    template_name = "user/user_detail.html"
+    template_name = "users/user_detail.html"
     context_object_name = "user"
     permission_required = "users.can_block_users"
