@@ -1,5 +1,4 @@
 from django.utils import timezone
-from django.contrib import messages
 from django.core.cache import cache
 from config.settings import CACHE_ENABLED, EMAIL_HOST_USER
 from django.core.mail import send_mail

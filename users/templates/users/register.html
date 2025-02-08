@@ -14,9 +14,12 @@
 
              </div>
             <button type="submit" class="btn btn-primary">
-                Зарегистрироваться
+                {% if object %}
+                 Сохранить
+                 {% else %}
+                 Зарегестрироваться
+                {% endif %}
              </button>
-
          </div>
   </div>
 

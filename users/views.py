@@ -8,10 +8,10 @@ from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import cache_page
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 
 from config.settings import EMAIL_HOST_USER
-from users.forms import UserRegisterForm
+from users.forms import UserRegisterForm, UserUpdateForm
 from users.models import User
 from django.contrib import messages
 
@@ -49,6 +49,18 @@ def email_verification(request, token):
     return redirect(reverse("users:login"))
 
 
+class UserUpdateViews(LoginRequiredMixin, UpdateView):
+    template_name = "users/register.html"
+    form_class = UserUpdateForm
+    success_url = reverse_lazy("users:login")
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)
+
+    def get_success_url(self):
+        return reverse("users:user_detail", args=[self.kwargs.get("pk")])
+
+
 class UserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     """Контроллер вывода списка сообщений"""
 
@@ -56,6 +68,14 @@ class UserList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = "users/users_list.html"
     context_object_name = "users"
     permission_required = "users.view_user"
+
+    def get_queryset(self):
+        """Исключение из списка суперпользователя и всех менеджеров"""
+        queryset = super().get_queryset()
+        queryset = queryset.filter(is_superuser=False)
+        # Исключаем пользователей с правами can_block_users
+        queryset = queryset.exclude(groups__permissions__codename='can_block_users')
+        return queryset
 
 
 class BlockUsersView(LoginRequiredMixin, View):
@@ -73,14 +93,13 @@ class BlockUsersView(LoginRequiredMixin, View):
 
         user.save()
 
-        return redirect("users:user_detail", pk=pk)
+        return redirect("users:users_list")
 
 
 @method_decorator(cache_page(60 * 5), name="dispatch")
-class UserDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class UserDetail(LoginRequiredMixin, DetailView):
     """Контроллер вывода списка сообщений"""
 
     model = User
     template_name = "users/user_detail.html"
     context_object_name = "user"
-    permission_required = "users.can_block_users"

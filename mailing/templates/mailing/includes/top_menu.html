@@ -38,12 +38,15 @@
                     <button type="submit" class="btn btn-link nav">Выйти</button>
                 </form>
             </li>
+            <li class="nav-item">
+                <a class="btn btn-link nav" href="{% url 'users:user_detail' user.pk %}">Профиль</a>
+            </li>
             {% else %}
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:login' %}">Войти</a>
+                <a class="btn btn-link nav" href="{% url 'users:login' %}">Войти</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+                <a class="btn btn-link nav" href="{% url 'users:register' %}">Регистрация</a>
             </li>
             {% endif %}
         </ul>
