@@ -1,0 +1,35 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Информация по рассылке{% endblock %}
+
+{% block content %}
+
+<h2>Название рассылки: {{ newsletter.name }}</h2>
+<p>Статус рассылки: {{ newsletter.get_status_display }}</p>
+<p>Время начала рассылки: {{ newsletter.first_sending }}</p>
+<p>Время конца рассылки: {{ newsletter.last_sending }}</p>
+<p>Сообщение в рассылки: {{ newsletter.message }}</p>
+<p>Получатели рассылки: {{ recipients }}</p>
+{% if perms.mailing.change_newsletter %}
+    <a href="{% url 'mailing:newsletter_update' newsletter.pk %}" class="btn btn-secondary">Редактировать</a>
+    <a href="{% url 'mailing:newsletter_delete' newsletter.pk %}" class="btn btn-danger">Удалить</a>
+{% endif %}
+<a href="{% url 'mailing:newsletter_list' %}" class="btn btn-primary">Вернуться к списку</a>
+
+{% if perms.mailing.change_newsletter %}
+<p>
+    <form action="{% url 'mailing:newsletter_sendmail' newsletter.id %}" method="post">
+       {% csrf_token %}
+    <button type="submit" class="btn btn-success">Отправить рассылку</button>
+    </form>
+</p>
+{% endif %}
+
+    {% if messages %}
+          {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+         {% endfor %}
+    {% endif %}
+{% endblock %}

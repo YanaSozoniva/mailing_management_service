@@ -1,0 +1,14 @@
+{% extends 'mailing/base.html' %}
+{% load my_tags %}
+{% block title %}Информация по пользователям{% endblock %}
+
+{% block content %}
+
+<h2>Пользователь: {{ user.email }}</h2>
+<img class="card-img-top" src="{{ user.avatar | media_filter }}" alt="Card image cap">
+<p>Телефон: {{ user.phone }}</p>
+<p>Страна: {{ user.country }}</p>
+
+<a href="{% url 'users:users_list' %}" class="btn btn-primary">Вернуться к списку</a>
+<a href="{% url 'users:user_update' user.pk %}" class="btn btn-primary">Редактировать</a>
+{% endblock %}

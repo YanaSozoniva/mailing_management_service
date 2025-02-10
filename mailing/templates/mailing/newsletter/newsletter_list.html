@@ -1,0 +1,33 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Список рассылок{% endblock %}
+
+{% block content %}
+{% if perms.mailing.add_newsletter %}
+    <p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+            <a class="btn btn-primary btn-lg px-4 me-sm-3" href="{% url 'mailing:newsletter_create' %}">Добавить новую рассылку</a>
+        </div>
+    </p>
+{% endif %}
+<h2>Список рассылок</h2>
+<ul class="list-group">
+    {% for newsletter in newsletters %}
+        <li class="list-group-item">
+            <a href="{% url 'mailing:newsletter_detail' newsletter.pk %}">{{ newsletter.name }} статус - {{ newsletter.get_status_display }}</a>
+                {% if perms.mailing.can_disable_newsletter %}
+                    <form action="{% url 'mailing:disable_newsletter' newsletter.pk %}" method="post">
+                        {% csrf_token %}
+                        {% if newsletter.status != 'complete' %}
+                             <button class="btn btn-secondary">Отключить рассылку</button>
+                        {% else %}
+                            <button class="btn btn-primary">Включить рассылку</button>
+                        {% endif %}
+                    </form>
+
+                {% endif %}
+            </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Список возможных получателей рассылок{% endblock %}
+
+{% block content %}
+{% if perms.mailing.add_mailingrecipient %}
+    <p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+        <a class="btn btn-primary btn-lg px-4 me-sm-3" href="{% url 'mailing:recipient_create' %}">Добавить нового получателя</a>
+    </div>
+    </p>
+{% endif %}
+<h2>Список возможных получателей рассылок</h2>
+<ul class="list-group">
+    {% for recipient in recipients %}
+        <li class="list-group-item">
+            <a href="{% url 'mailing:recipient_detail' recipient.pk %}">{{ recipient.last_name }} {{ recipient.first_name }} email: {{ recipient.email }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
